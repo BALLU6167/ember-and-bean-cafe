@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <script>
+      // When opened locally by double-clicking index.html (file:///):
+      if (window.location.protocol === 'file:' && !window.location.pathname.replace(/\\/g, '/').toLowerCase().includes('/dist/')) {
+        window.location.replace('./dist/index.html');
+      }
+    </script>
+    <title>Ember & Bean — Slow Coffee. Good Food. Better Moments.</title>
+    <meta name="description" content="Ember & Bean is an artisanal specialty coffee roastery and boutique kitchen in Jubilee Hills, Hyderabad. Serving slow coffee, handcrafted sourdough pizzas, smashed burgers, and slow moments." />
+    <meta name="keywords" content="Ember and Bean Hyderabad, Jubilee Hills Coffee, Specialty Coffee Roastery, Smashed Burgers, Sourdough Pizza Hyderabad, Loaded Truffle Fries" />
+    <meta name="theme-color" content="#1E1410" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ember & Bean — Slow Coffee. Good Food. Better Moments." />
+    <meta property="og:description" content="An artisanal specialty coffee roastery and boutique kitchen in Jubilee Hills, Hyderabad. Dedicated to single-origin transparency, handcrafted food, and unhurried hospitality." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=1200" />
+    <meta property="og:url" content="https://cafe.insforge.site" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Humanistic Editorial Typography: Fraunces (handcrafted display serif) + Newsreader (editorial serif) + Plus Jakarta Sans (warm humanist sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..700&display=swap" rel="stylesheet">
+
+    <!-- Schema.org LocalBusiness & Menu Structured Data for Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CafeOrCoffeeShop",
+      "name": "Ember & Bean Artisanal Roastery & Kitchen",
+      "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=1200",
+      "telephone": "+914048923000",
+      "email": "hello@emberandbeancafe.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Plot 42, Road No. 36, Jubilee Hills",
+        "addressLocality": "Hyderabad",
+        "addressRegion": "Telangana",
+        "postalCode": "500033",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 17.4319,
+        "longitude": 78.4073
+      },
+      "url": "https://cafe.insforge.site",
+      "priceRange": "₹₹",
+      "servesCuisine": [
+        "Specialty Coffee",
+        "Handcrafted Sourdough Pizzas",
+        "Gourmet Smashed Burgers",
+        "Single Origin Pour Overs"
+      ],
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "07:00",
+          "closes": "23:00"
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body class="bg-[#1E1410] text-[#F5EDE0] antialiased selection:bg-[#C68B59] selection:text-[#1E1410] overflow-x-hidden min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

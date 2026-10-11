@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ember-bg: #110C09;
+    --ember-surface: #1A130E;
+    --ember-card: #201712;
+    --ember-amber: #D49B6A;
+    --ember-terracotta: #B86F43;
+    --ember-cream: #FAF6F0;
+    --ember-parchment: #DDD3C4;
+    --ember-border: rgba(212, 155, 106, 0.22);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color: #FAF6F0;
+    background-color: #110C09;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Warm humanistic artisanal scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #110C09;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(212, 155, 106, 0.25);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D49B6A;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Fraunces', 'Newsreader', Georgia, serif;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* Warm humanistic typography accents */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #F7E4D0 0%, #D49B6A 55%, #B86F43 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-amber-glow {
+  color: #D49B6A;
+  text-shadow: 0 0 20px rgba(212, 155, 106, 0.3);
+}
+
+/* Artisanal glassmorphism for humanistic cafe cards */
+.glass-cafe-card {
+  background: rgba(22, 16, 12, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 155, 106, 0.22);
+}
+
+.glass-cafe-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-cafe-card-hover:hover {
+  background: rgba(28, 20, 15, 0.92);
+  border-color: rgba(212, 155, 106, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 24px -6px rgba(212, 155, 106, 0.2);
+}
+
+/* Tactile handcrafted button */
+.btn-artisanal {
+  background: linear-gradient(135deg, #C98A53 0%, #A86538 100%);
+  color: #120D0A;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(168, 101, 56, 0.35);
+  transition: all 0.25s ease;
+}
+.btn-artisanal:hover {
+  background: linear-gradient(135deg, #D49B6A 0%, #B86F43 100%);
+  box-shadow: 0 6px 25px rgba(212, 155, 106, 0.45);
+  transform: scale(1.02);
+}
+
+/* Absolute Mobile Stability: Prevent horizontal swipe/sliding */
+html,
+body {
+  width: 100% !important;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  touch-action: pan-y !important; /* Locks out horizontal gestures entirely — normal vertical scrolling only */
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-x: none !important;
+}
+
+#root {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  overscroll-behavior-x: none !important;
+}
