@@ -17,6 +17,8 @@ export const WorkspaceModeSection: React.FC<WorkspaceModeSectionProps> = ({ onBo
   const { t } = useLanguage();
   const [wifiTesting, setWifiTesting] = useState(false);
   const [wifiSpeed, setWifiSpeed] = useState('328 Mbps');
+  const [passClaimed, setPassClaimed] = useState(false);
+  const [copiedToken, setCopiedToken] = useState(false);
 
   const runSpeedTest = () => {
     setWifiTesting(true);
@@ -24,6 +26,19 @@ export const WorkspaceModeSection: React.FC<WorkspaceModeSectionProps> = ({ onBo
       setWifiSpeed(`${Math.floor(310 + Math.random() * 30)} Mbps`);
       setWifiTesting(false);
     }, 1200);
+  };
+
+  const handleClaimPass = () => {
+    setPassClaimed(true);
+    if (onBookDesk) {
+      onBookDesk();
+    }
+  };
+
+  const handleCopyPass = () => {
+    navigator.clipboard.writeText('EB-FOCUS-7075');
+    setCopiedToken(true);
+    setTimeout(() => setCopiedToken(false), 2500);
   };
 
   return (
@@ -142,10 +157,28 @@ export const WorkspaceModeSection: React.FC<WorkspaceModeSectionProps> = ({ onBo
             </div>
           </div>
 
-          <div className="w-full lg:w-auto px-8 py-4 bg-[#251A13] text-[#D49B6A] border border-[#D49B6A]/35 font-bold rounded-2xl text-xs uppercase tracking-wider shadow-xl flex items-center justify-center gap-2 whitespace-nowrap">
-            <Sparkles className="w-4 h-4 text-[#D49B6A]" />
-            <span>{t.wsPassCta}</span>
-          </div>
+          {!passClaimed ? (
+            <button
+              onClick={handleClaimPass}
+              className="w-full lg:w-auto px-8 py-4 bg-gradient-to-r from-[#D49B6A] to-[#B86F43] hover:from-[#E2AA79] hover:to-[#C67B4E] text-[#120D0A] font-bold rounded-2xl text-xs uppercase tracking-wider shadow-xl flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer transition-all hover:scale-105"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>{t.wsPassCta}</span>
+            </button>
+          ) : (
+            <div className="w-full lg:w-auto p-4 bg-[#120D0A] border border-emerald-500/40 rounded-2xl flex flex-col sm:flex-row items-center gap-3">
+              <div className="text-left">
+                <span className="text-[10px] uppercase font-mono text-emerald-400 block font-bold">✓ Pass Reserved</span>
+                <span className="font-mono text-xs text-[#FAF6F0] font-bold">Token: #EB-FOCUS-7075</span>
+              </div>
+              <button
+                onClick={handleCopyPass}
+                className="px-4 py-2 bg-[#D49B6A] text-[#120D0A] font-bold text-[11px] uppercase rounded-xl hover:bg-white transition-colors cursor-pointer"
+              >
+                {copiedToken ? '✓ Copied Token' : 'Copy Pass Token'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -20,6 +20,8 @@ export const GiftAndShareModal: React.FC<GiftAndShareModalProps> = ({
     'Because your mornings deserve slower sips and warmer moments. Enjoy! ☕✨'
   );
   const [copied, setCopied] = useState<boolean>(false);
+  const [sentVoucherIdx, setSentVoucherIdx] = useState<number | null>(null);
+  const [isCardAdded, setIsCardAdded] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -31,9 +33,21 @@ export const GiftAndShareModal: React.FC<GiftAndShareModalProps> = ({
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const handleSendCoffeeVoucher = (idx: number, itemName: string, itemPrice: number) => {
+    navigator.clipboard.writeText(
+      `Here is a coffee voucher for ${itemName} (₹${itemPrice}) at Ember & Bean Roastery! Redeem code: EB-TREAT-${Math.floor(1000 + Math.random() * 9000)}`
+    );
+    setSentVoucherIdx(idx);
+    setTimeout(() => setSentVoucherIdx(null), 2500);
+  };
+
   const handleAddCard = () => {
+    setIsCardAdded(true);
     onAddGiftCardToCart(amount, recipientName, customMessage);
-    onClose();
+    setTimeout(() => {
+      setIsCardAdded(false);
+      onClose();
+    }, 1200);
   };
 
   return (
@@ -181,7 +195,17 @@ export const GiftAndShareModal: React.FC<GiftAndShareModalProps> = ({
                 onClick={handleAddCard}
                 className="w-full py-4 bg-gradient-to-r from-[#C68B59] to-[#C85A32] text-[#1E1410] font-bold rounded-2xl text-xs uppercase tracking-wider shadow-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-transform"
               >
-                <Gift className="w-4 h-4" /> Add Gift Card to Order (₹{amount})
+                {isCardAdded ? (
+                  <>
+                    <Check className="w-4 h-4 text-[#1E1410]" />
+                    <span>✓ Gift Card Created & Added (₹{amount})</span>
+                  </>
+                ) : (
+                  <>
+                    <Gift className="w-4 h-4" />
+                    <span>Add Gift Card to Order (₹{amount})</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -207,18 +231,35 @@ export const GiftAndShareModal: React.FC<GiftAndShareModalProps> = ({
                 ].map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-3 rounded-xl bg-[#1A110D] border border-[#C68B59]/30 hover:border-[#DFB17B] transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-[#1A110D] border border-[#C68B59]/30 hover:border-[#DFB17B] transition-colors"
                   >
                     <div>
                       <span className="font-semibold text-[#F5EDE0] block">{item.name}</span>
                       <span className="font-mono text-[11px] text-[#DFB17B]">₹{item.price}</span>
                     </div>
-                    <button
-                      onClick={handleCopyLink}
-                      className="px-3 py-1.5 bg-[#C68B59] text-[#1E1410] font-bold rounded-lg text-xs"
-                    >
-                      Send Voucher
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleSendCoffeeVoucher(idx, item.name, item.price)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          sentVoucherIdx === idx
+                            ? 'bg-emerald-500 text-[#120D0A]'
+                            : 'bg-[#C68B59] hover:bg-[#DFB17B] text-[#1E1410]'
+                        }`}
+                      >
+                        {sentVoucherIdx === idx ? '✓ Code Copied' : 'Copy Voucher'}
+                      </button>
+
+                      <a
+                        href={`https://wa.me/?text=${encodeURIComponent(
+                          `Hey! I sent you a coffee treat from Ember & Bean Roastery: ${item.name} (₹${item.price}). Show code #EB-COFFEE-${idx + 1} at the counter!`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 bg-emerald-600/30 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
+                      >
+                        <span>Share on WhatsApp</span>
+                      </a>
+                    </div>
                   </div>
                 ))}
               </div>

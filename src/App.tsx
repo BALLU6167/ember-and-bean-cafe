@@ -188,7 +188,13 @@ function MainAppContent() {
       {/* 8. Floating Action Mobile Actions */}
       <FloatingMobileActions
         onExploreMenu={() => handleNavigate('menu')}
-        onOpenMap={() => handleNavigate('home')}
+        onOpenMap={() => {
+          handleNavigate('home');
+          setTimeout(() => {
+            const locEl = document.getElementById('location');
+            if (locEl) locEl.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
+        }}
       />
 
       {/* 10. Connoisseur Loyalty Passport Modal */}

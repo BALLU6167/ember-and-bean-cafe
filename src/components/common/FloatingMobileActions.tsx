@@ -48,13 +48,16 @@ export const FloatingMobileActions: React.FC<FloatingMobileActionsProps> = ({
       </a>
 
       {/* Directions button */}
-      <button
-        onClick={onOpenMap}
-        className="w-12 h-12 bg-[#2E211A] border border-[#C68B59]/30 text-[#DFB17B] rounded-xl flex items-center justify-center hover:bg-[#3D2C22] transition-colors cursor-pointer"
-        aria-label="Get Directions"
+      <a
+        href="https://maps.google.com/?q=Ember+%26+Bean+Artisanal+Roastery+Road+36+Jubilee+Hills+Hyderabad"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-12 h-12 bg-[#2E211A] border border-[#C68B59]/30 text-[#DFB17B] rounded-xl flex items-center justify-center hover:bg-[#3D2C22] transition-colors"
+        aria-label="Get Directions on Google Maps"
+        title="Get Directions on Google Maps"
       >
         <MapPin className="w-4 h-4" />
-      </button>
+      </a>
     </div>
   );
 };

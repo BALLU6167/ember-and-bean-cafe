@@ -3,7 +3,23 @@ import { AtelierScrollyCanvas } from '../components/scrollytelling/AtelierScroll
 import { AtelierScrollyOverlay } from '../components/scrollytelling/AtelierScrollyOverlay';
 import { TASTING_FLIGHTS, ORIGIN_ESTATES, EXTRACTION_SPECS } from '../data/atelierData';
 import { AtelierPage } from '../types/atelier';
-import { Sparkles, ArrowRight, Layers, Award, Compass, ShieldCheck, Flame, ExternalLink, Instagram } from 'lucide-react';
+import { 
+  Sparkles, 
+  ArrowRight, 
+  Layers, 
+  Award, 
+  Compass, 
+  ShieldCheck, 
+  Flame, 
+  ExternalLink, 
+  Instagram,
+  X,
+  CheckCircle,
+  Calendar,
+  Clock,
+  Users,
+  MessageSquare
+} from 'lucide-react';
 
 interface AtelierHomePageProps {
   onNavigate: (page: AtelierPage) => void;
@@ -18,6 +34,47 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
 }) => {
   const scrollTrackRef = useRef<HTMLDivElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Reservation Modal State
+  const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [selectedFlightName, setSelectedFlightName] = useState(TASTING_FLIGHTS[0]?.name || 'Imperial Geisha Omakase');
+  const [guestCount, setGuestCount] = useState(2);
+  const [resDate, setResDate] = useState('2026-10-20');
+  const [resTime, setResTime] = useState('11:00 AM');
+  const [resName, setResName] = useState('');
+  const [resPhone, setResPhone] = useState('');
+  const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
+
+  const handleOpenReservation = (flightName?: string) => {
+    if (flightName) {
+      setSelectedFlightName(flightName);
+    }
+    setIsReservationOpen(true);
+    setIsBookingConfirmed(false);
+  };
+
+  const handleInternalNav = (sectionKey: string) => {
+    if (sectionKey === 'home') {
+      onNavigate('home');
+      return;
+    }
+    const el = document.getElementById(sectionKey);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else if (sectionKey === 'philosophy') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (sectionKey === 'the-roast') {
+      const roastEl = document.getElementById('extraction-engine');
+      if (roastEl) roastEl.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      onNavigate(sectionKey as AtelierPage);
+    }
+  };
+
+  const handleReservationSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsBookingConfirmed(true);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,10 +106,10 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
           {/* 5-Stage Editorial Overlay */}
           <AtelierScrollyOverlay
             progress={scrollProgress}
-            onOpenReservation={onOpenReservation}
+            onOpenReservation={() => handleOpenReservation()}
             onOpenMenu={onOpenMenu}
-            onOpenEngine={() => onNavigate('extraction-engine')}
-            onOpenOrigins={() => onNavigate('origins')}
+            onOpenEngine={() => handleInternalNav('extraction-engine')}
+            onOpenOrigins={() => handleInternalNav('origins')}
           />
         </div>
       </section>
@@ -60,7 +117,7 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
       {/* ========================================================
           2. THE MASTER ARCHITECTURAL EXTRACTION ENGINE
           ======================================================== */}
-      <section className="relative z-10 py-32 bg-[#060504] border-t border-[#C6A15B]/20">
+      <section id="extraction-engine" className="relative z-10 py-32 bg-[#060504] border-t border-[#C6A15B]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20">
             <div className="max-w-2xl">
@@ -72,7 +129,7 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
               </h2>
             </div>
             <button
-              onClick={() => onNavigate('extraction-engine')}
+              onClick={() => handleInternalNav('extraction-engine')}
               className="text-xs font-mono uppercase tracking-[0.2em] text-[#C6A15B] hover:text-[#E58A2B] flex items-center gap-2 transition-colors cursor-pointer group"
             >
               <span>Full Engineering Dossier</span>
@@ -111,7 +168,7 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
       {/* ========================================================
           3. TASTING FLIGHTS SHOWCASE
           ======================================================== */}
-      <section className="relative z-10 py-32 bg-[#0C0A09] border-t border-[#C6A15B]/20">
+      <section id="tasting-flights" className="relative z-10 py-32 bg-[#0C0A09] border-t border-[#C6A15B]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <span className="text-[11px] uppercase tracking-[0.3em] font-mono text-[#C6A15B] font-bold block mb-3">
@@ -172,7 +229,7 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
 
                 <div className="mt-8 pt-6 border-t border-[#C6A15B]/20">
                   <button
-                    onClick={onOpenReservation}
+                    onClick={() => handleOpenReservation(flight.name)}
                     className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#C6A15B] to-[#E58A2B] hover:from-[#DFB17B] hover:to-[#C6A15B] text-[#060504] font-bold text-xs uppercase tracking-widest transition-all cursor-pointer shadow-lg hover:scale-102"
                   >
                     Reserve Flight
@@ -187,7 +244,7 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
       {/* ========================================================
           4. SINGLE-ESTATE VOLCANIC TERROIR PREVIEW
           ======================================================== */}
-      <section className="relative z-10 py-32 bg-[#060504] border-t border-[#C6A15B]/20">
+      <section id="origins" className="relative z-10 py-32 bg-[#060504] border-t border-[#C6A15B]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20">
             <div>
@@ -199,7 +256,7 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
               </h2>
             </div>
             <button
-              onClick={() => onNavigate('origins')}
+              onClick={() => handleInternalNav('origins')}
               className="text-xs font-mono uppercase tracking-[0.2em] text-[#C6A15B] hover:text-[#E58A2B] flex items-center gap-2 transition-colors cursor-pointer group"
             >
               <span>Explore All Terroirs</span>
@@ -296,22 +353,22 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
               </span>
               <ul className="space-y-2.5 font-light">
                 <li>
-                  <button onClick={() => onNavigate('philosophy')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
+                  <button onClick={() => handleInternalNav('philosophy')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
                     Philosophy & Wabi-Sabi
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigate('the-roast')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
+                  <button onClick={() => handleInternalNav('the-roast')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
                     Thermodynamic Roastery
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigate('extraction-engine')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
+                  <button onClick={() => handleInternalNav('extraction-engine')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
                     Extraction Engine Specs
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigate('origins')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
+                  <button onClick={() => handleInternalNav('origins')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
                     Single-Estate Origins
                   </button>
                 </li>
@@ -330,17 +387,17 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
               </span>
               <ul className="space-y-2.5 font-light">
                 <li>
-                  <button onClick={onOpenReservation} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
+                  <button onClick={() => handleOpenReservation('Bespoke Tasting Flight')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
                     Book Tasting Flight
                   </button>
                 </li>
                 <li>
-                  <button onClick={onOpenReservation} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
+                  <button onClick={() => handleOpenReservation('Private Omakase Table')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
                     Private Omakase Table
                   </button>
                 </li>
                 <li>
-                  <button onClick={onOpenReservation} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
+                  <button onClick={() => handleOpenReservation('Micro-Lot Sensory Cupping')} className="hover:text-[#F5F2EB] transition-colors cursor-pointer text-left">
                     Micro-Lot Sensory Cupping
                   </button>
                 </li>
@@ -364,6 +421,184 @@ export const AtelierHomePage: React.FC<AtelierHomePageProps> = ({
           </div>
         </div>
       </footer>
+
+      {/* Interactive Tasting Flight & Table Reservation Modal */}
+      {isReservationOpen && (
+        <div className="fixed inset-0 z-[99990] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="relative max-w-xl w-full bg-[#0C0A09] border-2 border-[#C6A15B]/50 rounded-3xl p-6 sm:p-8 shadow-2xl text-[#F5F2EB] my-8">
+            <button
+              onClick={() => setIsReservationOpen(false)}
+              aria-label="Close Reservation Modal"
+              className="absolute top-5 right-5 p-2 text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {!isBookingConfirmed ? (
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-[#C6A15B]" />
+                  <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C6A15B]">
+                    Atelier Kōhī Private Reservation
+                  </span>
+                </div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F5F2EB] mb-1">
+                  Reserve Tasting Table
+                </h3>
+                <p className="text-xs text-[#E8E3D9]/70 mb-6 font-light">
+                  Seating is allocated for 75 minutes of uninterrupted pour-over ceremony and paired gastronomy.
+                </p>
+
+                <form onSubmit={handleReservationSubmit} className="space-y-4 text-xs">
+                  <div>
+                    <label className="font-mono text-[11px] uppercase tracking-wider text-[#C6A15B] block mb-1">
+                      Experience Selection
+                    </label>
+                    <select
+                      value={selectedFlightName}
+                      onChange={(e) => setSelectedFlightName(e.target.value)}
+                      className="w-full bg-[#14100D] border border-[#C6A15B]/40 rounded-xl px-3.5 py-2.5 text-xs text-[#F5F2EB] focus:outline-none focus:border-[#C6A15B]"
+                    >
+                      {TASTING_FLIGHTS.map((f) => (
+                        <option key={f.id} value={f.name}>
+                          {f.name} (₹{f.priceInr})
+                        </option>
+                      ))}
+                      <option value="Private Omakase Table">Private Omakase Table (Full Service)</option>
+                      <option value="Micro-Lot Sensory Cupping">Micro-Lot Sensory Cupping (Head Roaster)</option>
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="font-mono text-[11px] uppercase tracking-wider text-[#C6A15B] block mb-1">
+                        Guests
+                      </label>
+                      <select
+                        value={guestCount}
+                        onChange={(e) => setGuestCount(Number(e.target.value))}
+                        className="w-full bg-[#14100D] border border-[#C6A15B]/40 rounded-xl px-3 py-2.5 text-xs text-[#F5F2EB] focus:outline-none focus:border-[#C6A15B]"
+                      >
+                        {[1, 2, 3, 4, 6].map((num) => (
+                          <option key={num} value={num}>
+                            {num} {num === 1 ? 'Guest' : 'Guests'}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="font-mono text-[11px] uppercase tracking-wider text-[#C6A15B] block mb-1">
+                        Date
+                      </label>
+                      <input
+                        type="date"
+                        required
+                        value={resDate}
+                        onChange={(e) => setResDate(e.target.value)}
+                        className="w-full bg-[#14100D] border border-[#C6A15B]/40 rounded-xl px-3 py-2 text-xs text-[#F5F2EB] focus:outline-none focus:border-[#C6A15B]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-mono text-[11px] uppercase tracking-wider text-[#C6A15B] block mb-1">
+                        Seating Time
+                      </label>
+                      <select
+                        value={resTime}
+                        onChange={(e) => setResTime(e.target.value)}
+                        className="w-full bg-[#14100D] border border-[#C6A15B]/40 rounded-xl px-3 py-2.5 text-xs text-[#F5F2EB] focus:outline-none focus:border-[#C6A15B]"
+                      >
+                        {['10:00 AM', '11:30 AM', '02:00 PM', '04:00 PM', '06:00 PM', '08:00 PM'].map((t) => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <div>
+                      <label className="font-mono text-[11px] uppercase tracking-wider text-[#C6A15B] block mb-1">
+                        Primary Guest Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={resName}
+                        onChange={(e) => setResName(e.target.value)}
+                        placeholder="e.g. Vikram Sharma"
+                        className="w-full bg-[#14100D] border border-[#C6A15B]/40 rounded-xl px-3.5 py-2.5 text-xs text-[#F5F2EB] placeholder-white/30 focus:outline-none focus:border-[#C6A15B]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-mono text-[11px] uppercase tracking-wider text-[#C6A15B] block mb-1">
+                        WhatsApp Contact
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={resPhone}
+                        onChange={(e) => setResPhone(e.target.value)}
+                        placeholder="+91 98765 43210"
+                        className="w-full bg-[#14100D] border border-[#C6A15B]/40 rounded-xl px-3.5 py-2.5 text-xs text-[#F5F2EB] placeholder-white/30 focus:outline-none focus:border-[#C6A15B]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-4 flex flex-col sm:flex-row gap-3">
+                    <button
+                      type="submit"
+                      className="flex-1 py-3.5 bg-gradient-to-r from-[#C6A15B] to-[#E58A2B] hover:from-[#DFB17B] hover:to-[#C6A15B] text-[#060504] font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-xl cursor-pointer"
+                    >
+                      Confirm Reservation Table
+                    </button>
+
+                    <a
+                      href={`https://wa.me/919876543210?text=${encodeURIComponent(
+                        `Hello Atelier Kōhī, I would like to reserve: ${selectedFlightName} for ${guestCount} guests on ${resDate} at ${resTime}. Name: ${resName || 'Guest'}.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-3.5 bg-[#14100D] border border-emerald-600/40 text-emerald-400 font-bold text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 hover:bg-emerald-950/30 transition-colors"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span>WhatsApp Direct</span>
+                    </a>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <CheckCircle className="w-14 h-14 text-[#C6A15B] mx-auto mb-3 animate-bounce" />
+                <h4 className="font-serif text-2xl font-bold text-[#F5F2EB] mb-1">Reservation Confirmed</h4>
+                <p className="text-xs text-[#E8E3D9]/70 mb-4 max-w-sm mx-auto">
+                  Your tasting experience for <strong>{selectedFlightName}</strong> has been booked for {guestCount} guests on {resDate} at {resTime}. Booking Code: <strong className="font-mono text-[#C6A15B]">#EB-ATELIER-2026</strong>.
+                </p>
+                <div className="flex justify-center gap-3">
+                  <a
+                    href={`https://wa.me/919876543210?text=${encodeURIComponent(
+                      `Hello Atelier Kōhī, confirming my booking #EB-ATELIER-2026 for ${selectedFlightName} on ${resDate} at ${resTime}. Name: ${resName}.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider flex items-center gap-1.5"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    <span>Send to WhatsApp Concierge</span>
+                  </a>
+                  <button
+                    onClick={() => setIsReservationOpen(false)}
+                    className="px-5 py-2.5 bg-[#14100D] border border-[#C6A15B]/40 text-[#C6A15B] font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer hover:bg-white/10"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

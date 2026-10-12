@@ -148,10 +148,10 @@ export const LocationHoursSection: React.FC = () => {
                   <span className="text-[10px] text-[#DDD3C4]/60">Opposite Peddamma Temple Metro Link</span>
                 </div>
                 <a
-                  href="https://maps.google.com"
+                  href="https://maps.google.com/?q=Ember+%26+Bean+Artisanal+Roastery+Road+36+Jubilee+Hills+Hyderabad"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-1.5 bg-[#D49B6A] text-[#120D0A] font-bold rounded-lg text-[11px] flex items-center gap-1"
+                  className="px-3 py-1.5 bg-[#D49B6A] text-[#120D0A] font-bold rounded-lg text-[11px] flex items-center gap-1 hover:bg-[#E2AA79] transition-colors"
                 >
                   <span>Open Maps</span>
                   <ExternalLink className="w-3 h-3" />

@@ -19,7 +19,19 @@ export const DrinkPairingModal: React.FC<DrinkPairingModalProps> = ({
   onAddToCart,
   onAddBothToCart,
 }) => {
+  const [requestedPairId, setRequestedPairId] = React.useState<string | null>(null);
+
   if (!isOpen || !item) return null;
+
+  const handleRequestCombo = (pair: MenuItem) => {
+    setRequestedPairId(pair.id);
+    if (onAddBothToCart) {
+      onAddBothToCart(item, pair);
+    }
+    setTimeout(() => {
+      setRequestedPairId(null);
+    }, 3000);
+  };
 
   return (
     <div className="fixed inset-0 z-[99960] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
@@ -87,11 +99,22 @@ export const DrinkPairingModal: React.FC<DrinkPairingModalProps> = ({
                 </div>
               </div>
 
-              <div className="text-right sm:text-right">
+              <div className="text-right sm:text-right flex flex-col items-end gap-1.5">
                 <span className="text-xs text-[#DFB17B] font-semibold block flex items-center gap-1 justify-end">
                   <Sparkles className="w-3.5 h-3.5" /> Culinary Match
                 </span>
                 <span className="text-[11px] text-[#F5EDE0]/60 font-mono">Combo: ₹{item.price + pair.price}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRequestCombo(pair)}
+                  className={`mt-1 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                    requestedPairId === pair.id
+                      ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                      : 'bg-[#C68B59] hover:bg-[#DFB17B] text-[#1E1410]'
+                  }`}
+                >
+                  {requestedPairId === pair.id ? '✓ Requested' : 'Order Combo'}
+                </button>
               </div>
             </div>
           ))}

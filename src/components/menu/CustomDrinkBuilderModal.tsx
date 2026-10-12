@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CustomDrinkConfig, MenuItem } from '../../types/cafe';
-import { X, Sparkles, Check, Plus, Coffee } from 'lucide-react';
+import { X, Sparkles, Check, Plus, Coffee, CheckCircle, Copy } from 'lucide-react';
 
 interface CustomDrinkBuilderModalProps {
   isOpen: boolean;
@@ -20,6 +20,8 @@ export const CustomDrinkBuilderModal: React.FC<CustomDrinkBuilderModalProps> = (
   const [syrup, setSyrup] = useState<CustomDrinkConfig['syrup']>('Madagascar Vanilla Bean');
   const [temperature, setTemperature] = useState<CustomDrinkConfig['temperature']>('Steamed Hot (65°C)');
   const [toppings, setToppings] = useState<string[]>(['Cocoa Dust']);
+  const [isSaved, setIsSaved] = useState(false);
+  const [copiedSpecs, setCopiedSpecs] = useState(false);
 
   if (!isOpen) return null;
 
@@ -42,6 +44,8 @@ export const CustomDrinkBuilderModal: React.FC<CustomDrinkBuilderModalProps> = (
     }
   };
 
+  const customName = `${size.split(' ')[0]} ${temperature.includes('Ice') ? 'Iced' : 'Hot'} ${syrup !== 'None' ? syrup.split(' ')[1] || syrup : 'Artisan'} ${base.replace('Concentrate', '')}`;
+
   const handleAdd = () => {
     const customConfig: CustomDrinkConfig = {
       size,
@@ -52,11 +56,17 @@ export const CustomDrinkBuilderModal: React.FC<CustomDrinkBuilderModalProps> = (
       temperature,
       toppings,
     };
-    const customName = `${size.split(' ')[0]} ${temperature.includes('Ice') ? 'Iced' : 'Hot'} ${syrup !== 'None' ? syrup.split(' ')[1] || syrup : 'Artisan'} ${base.replace('Concentrate', '')}`;
     if (onAddCustomToCart) {
       onAddCustomToCart(customConfig, basePrice, customName);
     }
-    onClose();
+    setIsSaved(true);
+  };
+
+  const handleCopySpecs = () => {
+    const specs = `Ember & Bean Bespoke Drink:\n- Name: ${customName}\n- Size: ${size}\n- Base: ${base} (${shots} shots)\n- Milk: ${milk}\n- Syrup: ${syrup}\n- Temp: ${temperature}\n- Toppings: ${toppings.join(', ') || 'None'}\n- Est. Price: ₹${basePrice}`;
+    navigator.clipboard.writeText(specs);
+    setCopiedSpecs(true);
+    setTimeout(() => setCopiedSpecs(false), 2500);
   };
 
   // Visual cup liquid color based on milk and syrup
@@ -79,19 +89,57 @@ export const CustomDrinkBuilderModal: React.FC<CustomDrinkBuilderModalProps> = (
           <X className="w-6 h-6" />
         </button>
 
-        <div className="mb-6">
-          <span className="text-[11px] tracking-[0.25em] uppercase text-[#C68B59] font-bold block mb-1">
-            Bespoke Roastery Lab
-          </span>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F5EDE0]">
-            The Custom Cup Builder
-          </h2>
-          <p className="text-xs sm:text-sm text-[#F5EDE0]/70">
-            Tailor your milk, espresso ratio, house-made botanicals, and temperature with live SVG visualization.
-          </p>
-        </div>
+        {isSaved ? (
+          <div className="py-12 text-center">
+            <CheckCircle className="w-16 h-16 text-[#DFB17B] mx-auto mb-4 animate-bounce" />
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#C68B59] block mb-1">
+              Bespoke Roastery Lab
+            </span>
+            <h3 className="font-serif text-3xl font-bold text-[#F5EDE0] mb-2">Custom Recipe Saved</h3>
+            <p className="text-sm text-[#DFB17B] font-mono mb-4">{customName} — ₹{basePrice}</p>
+            <div className="bg-[#120B08] p-5 rounded-2xl border border-[#C68B59]/30 max-w-md mx-auto mb-6 text-xs text-left space-y-1.5 font-mono text-[#F5EDE0]/85">
+              <p>• Size: {size}</p>
+              <p>• Base: {base} ({shots} shots)</p>
+              <p>• Milk: {milk}</p>
+              <p>• Syrup: {syrup}</p>
+              <p>• Temperature: {temperature}</p>
+              <p>• Toppings: {toppings.join(', ') || 'None'}</p>
+            </div>
+            <div className="flex justify-center gap-3">
+              <button
+                type="button"
+                onClick={handleCopySpecs}
+                className="px-6 py-3 bg-[#C68B59] hover:bg-[#DFB17B] text-[#1E1410] font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer shadow-md transition-all"
+              >
+                {copiedSpecs ? '✓ Recipe Specs Copied' : 'Copy Recipe Specs'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSaved(false);
+                  onClose();
+                }}
+                className="px-6 py-3 bg-[#1E1410] border border-[#C68B59]/40 text-[#DFB17B] font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer hover:bg-white/10 transition-all"
+              >
+                Close & Return
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6">
+              <span className="text-[11px] tracking-[0.25em] uppercase text-[#C68B59] font-bold block mb-1">
+                Bespoke Roastery Lab
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F5EDE0]">
+                The Custom Cup Builder
+              </h2>
+              <p className="text-xs sm:text-sm text-[#F5EDE0]/70">
+                Tailor your milk, espresso ratio, house-made botanicals, and temperature with live SVG visualization.
+              </p>
+            </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Interactive Illustrated Cup Visualization */}
           <div className="lg:col-span-5 bg-[#120B08] border border-[#C68B59]/30 rounded-2xl p-6 flex flex-col items-center justify-center relative">
             <span className="text-[10px] uppercase tracking-widest text-[#DFB17B] font-mono mb-4">
@@ -365,6 +413,8 @@ export const CustomDrinkBuilderModal: React.FC<CustomDrinkBuilderModalProps> = (
             </div>
           </div>
         </div>
+        </>
+      )}
       </div>
     </div>
   );
