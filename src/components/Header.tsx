@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking, onOpenAdmin }) =>
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Brand Logo & Name */}
-          <a href="#" className="flex items-center gap-3 group">
+          <a href="#doctor" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-full bg-[#0F172A] text-white flex items-center justify-center font-serif text-lg font-bold shadow-md group-hover:bg-[#0F766E] transition-colors">
               LK
             </div>
